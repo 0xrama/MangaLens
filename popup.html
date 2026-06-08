@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 360px;
+      min-height: 380px;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      background: #08080c;
+      color: #e8e4df;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── Screen-tone dot pattern overlay ─────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(200,190,180,0.03) 1px, transparent 1px);
+      background-size: 4px 4px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Manga panel header ──────────────────────────────── */
+    .header {
+      position: relative;
+      padding: 20px 22px 18px;
+      background: linear-gradient(175deg, #101018 0%, #0c0c14 100%);
+      border-bottom: 3px solid #c23b22;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    /* Diagonal speed lines behind header */
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 120px;
+      height: 100%;
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 3px,
+        rgba(194, 59, 34, 0.06) 3px,
+        rgba(194, 59, 34, 0.06) 4px
+      );
+      pointer-events: none;
+    }
+
+    /* Corner bracket (top-right) */
+    .header::after {
+      content: '';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 20px;
+      height: 20px;
+      border-top: 2px solid #c23b22;
+      border-right: 2px solid #c23b22;
+      opacity: 0.4;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      background: #c23b22;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Shrikhand', serif;
+      font-size: 18px;
+      color: #fff;
+      transform: rotate(-3deg);
+      clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
+      flex-shrink: 0;
+    }
+
+    .header-text h1 {
+      font-family: 'Shrikhand', serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: #e8e4df;
+      letter-spacing: 1px;
+      line-height: 1;
+    }
+
+    .header-text .tagline {
+      font-size: 10px;
+      font-weight: 500;
+      color: #6b6670;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    /* ── Main content ────────────────────────────────────── */
+    .content {
+      position: relative;
+      z-index: 1;
+      padding: 16px 20px 20px;
+    }
+
+    /* ── Status indicator ────────────────────────────────── */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: #111118;
+      border: 1px solid #1e1e2a;
+      border-left: 3px solid #c23b22;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .status-indicator {
+      position: relative;
+      width: 10px;
+      height: 10px;
+      flex-shrink: 0;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #444;
+    }
+
+    .status-dot.connected {
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+    }
+
+    /* Pulse ring for connected state */
+    .status-dot.connected::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      animation: pulse-ring 2s ease-out infinite;
+    }
+
+    @keyframes pulse-ring {
+      0% { transform: scale(0.8); opacity: 1; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    .status-text {
+      font-size: 12px;
+      font-weight: 500;
+      color: #888;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── Progress section ────────────────────────────────── */
+    .progress-section {
+      display: none;
+      margin-bottom: 14px;
+      animation: fadeSlideIn 0.3s ease;
+    }
+    .progress-section.active { display: block; }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .progress-track {
+      height: 4px;
+      background: #1a1a24;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #c23b22, #d4a853);
+      width: 0%;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    /* Shimmer on progress bar */
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 60px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-60px); }
+      100% { transform: translateX(360px); }
+    }
+
+    .progress-label {
+      font-size: 11px;
+      color: #6b6670;
+      margin-top: 6px;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Buttons ─────────────────────────────────────────── */
+    .btn-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-translate {
+      background: #c23b22;
+      color: #fff;
+      clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+    }
+    .btn-translate:hover:not(:disabled) {
+      background: #d44429;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(194, 59, 34, 0.35);
+    }
+    .btn-translate:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-clear {
+      background: transparent;
+      color: #888;
+      border: 1px solid #2a2a36;
+      clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+    }
+    .btn-clear:hover:not(:disabled) {
+      color: #e8e4df;
+      border-color: #444;
+      background: #111118;
+    }
+
+    .btn-settings {
+      background: #111118;
+      color: #999;
+      border: 1px solid #1e1e2a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-settings:hover:not(:disabled) {
+      color: #d4a853;
+      border-color: rgba(212, 168, 83, 0.3);
+      background: #141420;
+    }
+
+    .btn-settings .gear-icon {
+      width: 14px;
+      height: 14px;
+      opacity: 0.6;
+      transition: opacity 0.2s, transform 0.4s;
+    }
+
+    .btn-settings:hover:not(:disabled) .gear-icon {
+      opacity: 1;
+      transform: rotate(90deg);
+    }
+
+    /* ── Divider with manga-inspired treatment ───────────── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #2a2a36 20%, #2a2a36 80%, transparent);
+      margin: 4px 0 14px;
+      position: relative;
+    }
+
+    /* ── Info grid ───────────────────────────────────────── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .info-card {
+      padding: 10px 12px;
+      background: #0e0e16;
+      border: 1px solid #1a1a24;
+      position: relative;
+    }
+
+    .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 12px;
+      height: 12px;
+      border-top: 1px solid #2a2a36;
+      border-left: 1px solid #2a2a36;
+    }
+
+    .info-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 12px;
+      height: 12px;
+      border-bottom: 1px solid #2a2a36;
+      border-right: 1px solid #2a2a36;
+    }
+
+    .info-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: #4a4a58;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-family: 'Shrikhand', serif;
+      font-size: 22px;
+      color: #d4a853;
+      line-height: 1;
+    }
+
+    .info-value.muted {
+      color: #3a3a48;
+    }
+
+    /* ── Ink splatter decoration ─────────────────────────── */
+    .ink-splatter {
+      position: absolute;
+      bottom: 20px;
+      right: 10px;
+      width: 50px;
+      height: 50px;
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Bottom edge decoration ──────────────────────────── */
+    .bottom-edge {
+      height: 3px;
+      background: linear-gradient(90deg, #c23b22, #d4a853, #c23b22);
+      opacity: 0.6;
+    }
+
+    /* ── Animations ──────────────────────────────────────── */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .header { animation: fadeIn 0.3s ease; }
+    .content { animation: fadeIn 0.4s ease 0.1s both; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div class="logo-mark">M</div>
+      <div class="header-text">
+        <h1>MangaLens</h1>
+        <div class="tagline">Webtoon Translator</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="status-bar">
+      <div class="status-indicator">
+        <div class="status-dot" id="statusDot"></div>
+      </div>
+      <span class="status-text" id="statusText">No API key configured</span>
+    </div>
+
+    <div class="progress-section" id="progressSection">
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-label" id="progressText">Initializing...</div>
+    </div>
+
+    <div class="btn-stack">
+      <button class="btn btn-translate" id="translateBtn" disabled>TRANSLATE CHAPTER</button>
+      <button class="btn btn-clear" id="clearBtn" style="display:none;">CLEAR TRANSLATIONS</button>
+      <button class="btn btn-settings" id="settingsBtn">
+        <svg class="gear-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+        Settings
+      </button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-label">Panels</div>
+        <div class="info-value" id="imageCount">—</div>
+      </div>
+      <div class="info-card">
+        <div class="info-label">Translated</div>
+        <div class="info-value" id="translatedCount">0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decorative ink splatter SVG -->
+  <svg class="ink-splatter" viewBox="0 0 100 100">
+    <circle cx="40" cy="50" r="18" fill="currentColor"/>
+    <circle cx="65" cy="35" r="10" fill="currentColor"/>
+    <circle cx="55" cy="70" r="8" fill="currentColor"/>
+    <circle cx="75" cy="55" r="5" fill="currentColor"/>
+    <circle cx="30" cy="30" r="4" fill="currentColor"/>
+    <ellipse cx="70" cy="75" rx="6" ry="3" fill="currentColor" transform="rotate(30 70 75)"/>
+  </svg>
+
+  <div class="bottom-edge"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
