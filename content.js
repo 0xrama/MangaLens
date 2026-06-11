@@ -11,7 +11,7 @@
 
   // ── Config ─────────────────────────────────────────────────────────
   const API_BASE = 'https://api.moonshot.ai/v1/chat/completions';
-  const MODEL = 'kimi-k2.6';
+  const MODEL = 'kimi-k2.5';
 
   // ── Helpers ────────────────────────────────────────────────────────
 
