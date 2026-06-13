@@ -4,397 +4,342 @@
   <meta charset="UTF-8">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Spline+Sans+Mono:wght@400;500;600;700&family=Spline+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    /* ════════════════════════════════════════════════════════════
+       MangaLens — Risograph Comic Print theme
+       Warm paper · heavy ink · red+blue spot color · halftone
+       ════════════════════════════════════════════════════════════ */
+    :root {
+      --paper:    #f2ebdc;
+      --paper-2:  #e9dfca;
+      --ink:      #17120c;
+      --ink-soft: #6a5e4d;
+      --red:      #e8391a;
+      --blue:     #1f3fd1;
+      --yellow:   #f4c233;
+      --green:    #1f9d4d;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       width: 360px;
-      min-height: 380px;
-      font-family: 'Zen Kaku Gothic New', sans-serif;
-      background: #08080c;
-      color: #e8e4df;
-      overflow-x: hidden;
+      min-height: 400px;
+      font-family: 'Spline Sans', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
       position: relative;
+      overflow-x: hidden;
     }
 
-    /* ── Screen-tone dot pattern overlay ─────────────────── */
+    /* ── Halftone dot texture (red, low opacity) ─────────────── */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background-image: radial-gradient(circle, rgba(200,190,180,0.03) 1px, transparent 1px);
-      background-size: 4px 4px;
+      background-image: radial-gradient(circle, rgba(232,57,26,0.14) 1.1px, transparent 1.4px);
+      background-size: 7px 7px;
       pointer-events: none;
       z-index: 0;
     }
-
-    /* ── Manga panel header ──────────────────────────────── */
-    .header {
-      position: relative;
-      padding: 20px 22px 18px;
-      background: linear-gradient(175deg, #101018 0%, #0c0c14 100%);
-      border-bottom: 3px solid #c23b22;
-      overflow: hidden;
-      z-index: 1;
+    /* ── Paper grain (subtle ink speckle) ────────────────────── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(23,18,12,0.05) 0.5px, transparent 0.6px);
+      background-size: 3px 3px;
+      pointer-events: none;
+      z-index: 0;
+      mix-blend-mode: multiply;
     }
 
-    /* Diagonal speed lines behind header */
+    /* ════════ HEADER — comic masthead panel ════════ */
+    .header {
+      position: relative;
+      z-index: 2;
+      padding: 22px 20px 20px;
+      background: var(--ink);
+      color: var(--paper);
+      border-bottom: 3px solid var(--ink);
+      overflow: hidden;
+    }
+    /* white halftone burst behind title */
     .header::before {
       content: '';
       position: absolute;
-      top: 0;
-      right: 0;
-      width: 120px;
-      height: 100%;
-      background: repeating-linear-gradient(
-        -45deg,
-        transparent,
-        transparent 3px,
-        rgba(194, 59, 34, 0.06) 3px,
-        rgba(194, 59, 34, 0.06) 4px
-      );
+      top: -40%;
+      right: -10%;
+      width: 180px;
+      height: 200%;
+      background-image: radial-gradient(circle, rgba(242,235,220,0.16) 1.4px, transparent 1.7px);
+      background-size: 8px 8px;
+      transform: rotate(8deg);
       pointer-events: none;
     }
 
-    /* Corner bracket (top-right) */
-    .header::after {
-      content: '';
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      width: 20px;
-      height: 20px;
-      border-top: 2px solid #c23b22;
-      border-right: 2px solid #c23b22;
-      opacity: 0.4;
-    }
-
     .header-content {
+      position: relative;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 13px;
     }
 
+    /* Square ink stamp with offset red shadow */
     .logo-mark {
-      width: 36px;
-      height: 36px;
-      background: #c23b22;
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+      background: var(--red);
+      color: var(--paper);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Shrikhand', serif;
-      font-size: 18px;
-      color: #fff;
-      transform: rotate(-3deg);
-      clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
-      flex-shrink: 0;
+      font-family: 'Anton', sans-serif;
+      font-size: 26px;
+      border: 2.5px solid var(--paper);
+      box-shadow: 4px 4px 0 var(--blue);
+      transform: rotate(-4deg);
     }
 
     .header-text h1 {
-      font-family: 'Shrikhand', serif;
-      font-size: 20px;
+      font-family: 'Anton', sans-serif;
+      font-size: 31px;
       font-weight: 400;
-      color: #e8e4df;
-      letter-spacing: 1px;
-      line-height: 1;
+      letter-spacing: 1.5px;
+      line-height: 0.92;
+      text-transform: uppercase;
+      /* misregistration / chromatic misprint */
+      text-shadow: 2px 0 0 var(--red), -2px 0 0 var(--blue);
     }
 
     .header-text .tagline {
-      font-size: 10px;
-      font-weight: 500;
-      color: #6b6670;
-      letter-spacing: 2px;
+      font-family: 'Spline Sans Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--yellow);
+      letter-spacing: 3.5px;
       text-transform: uppercase;
-      margin-top: 3px;
+      margin-top: 5px;
     }
 
-    /* ── Main content ────────────────────────────────────── */
+    /* ════════ CONTENT ════════ */
     .content {
       position: relative;
       z-index: 1;
-      padding: 16px 20px 20px;
+      padding: 18px 18px 20px;
     }
 
-    /* ── Status indicator ────────────────────────────────── */
+    /* ── Status readout (OCR scanner strip) ─────────────────── */
     .status-bar {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 10px 14px;
-      background: #111118;
-      border: 1px solid #1e1e2a;
-      border-left: 3px solid #c23b22;
-      margin-bottom: 16px;
-      position: relative;
+      padding: 10px 12px;
+      background: var(--paper-2);
+      border: 2.5px solid var(--ink);
+      box-shadow: 3px 3px 0 var(--ink);
+      margin-bottom: 18px;
     }
 
-    .status-indicator {
-      position: relative;
-      width: 10px;
-      height: 10px;
-      flex-shrink: 0;
-    }
+    .status-indicator { position: relative; width: 11px; height: 11px; flex-shrink: 0; }
 
     .status-dot {
-      width: 10px;
-      height: 10px;
+      width: 11px; height: 11px;
       border-radius: 50%;
-      background: #444;
+      background: var(--ink-soft);
+      border: 1.5px solid var(--ink);
     }
-
-    .status-dot.connected {
-      background: #22c55e;
-      box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
-    }
-
-    /* Pulse ring for connected state */
+    .status-dot.connected { background: var(--green); }
     .status-dot.connected::after {
       content: '';
       position: absolute;
-      inset: -4px;
+      inset: -5px;
       border-radius: 50%;
-      border: 1px solid rgba(34, 197, 94, 0.3);
-      animation: pulse-ring 2s ease-out infinite;
+      border: 1.5px solid var(--green);
+      animation: pulse-ring 1.8s ease-out infinite;
     }
-
     @keyframes pulse-ring {
-      0% { transform: scale(0.8); opacity: 1; }
-      100% { transform: scale(1.6); opacity: 0; }
+      0%   { transform: scale(0.7); opacity: 1; }
+      100% { transform: scale(1.7); opacity: 0; }
     }
 
     .status-text {
-      font-size: 12px;
+      font-family: 'Spline Sans Mono', monospace;
+      font-size: 11px;
       font-weight: 500;
-      color: #888;
-      letter-spacing: 0.3px;
+      color: var(--ink);
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
     }
 
-    /* ── Progress section ────────────────────────────────── */
+    /* ── Progress ───────────────────────────────────────────── */
     .progress-section {
       display: none;
-      margin-bottom: 14px;
-      animation: fadeSlideIn 0.3s ease;
+      margin-bottom: 16px;
+      animation: panelIn 0.3s cubic-bezier(0.34,1.4,0.64,1);
     }
     .progress-section.active { display: block; }
 
-    @keyframes fadeSlideIn {
-      from { opacity: 0; transform: translateY(-6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     .progress-track {
-      height: 4px;
-      background: #1a1a24;
+      height: 14px;
+      background: var(--paper-2);
+      border: 2.5px solid var(--ink);
       position: relative;
       overflow: hidden;
     }
-
     .progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, #c23b22, #d4a853);
       width: 0%;
-      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
+      background: var(--red);
+      background-image: repeating-linear-gradient(
+        -45deg, transparent, transparent 5px,
+        rgba(23,18,12,0.18) 5px, rgba(23,18,12,0.18) 10px);
+      transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+      border-right: 2.5px solid var(--ink);
     }
-
-    /* Shimmer on progress bar */
-    .progress-fill::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 60px;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      animation: shimmer 1.5s infinite;
-    }
-
-    @keyframes shimmer {
-      0% { transform: translateX(-60px); }
-      100% { transform: translateX(360px); }
-    }
-
     .progress-label {
-      font-size: 11px;
-      color: #6b6670;
-      margin-top: 6px;
+      font-family: 'Spline Sans Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--ink-soft);
+      margin-top: 7px;
       text-align: center;
       letter-spacing: 0.5px;
+      text-transform: uppercase;
     }
 
-    /* ── Buttons ─────────────────────────────────────────── */
-    .btn-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
+    /* ── Buttons (comic action panels) ──────────────────────── */
+    .btn-stack { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
 
     .btn {
       width: 100%;
-      padding: 12px 16px;
-      border: none;
-      font-family: 'Zen Kaku Gothic New', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
+      padding: 13px 16px;
+      border: 2.5px solid var(--ink);
+      font-family: 'Anton', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      letter-spacing: 0.5px;
-      position: relative;
-      overflow: hidden;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.15s ease, color 0.15s ease;
     }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: 2px 2px 0 var(--ink) !important; transform: none !important; }
 
-    .btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
+    /* press-into-paper interaction: button slides onto its own shadow */
     .btn-translate {
-      background: #c23b22;
-      color: #fff;
-      clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+      background: var(--red);
+      color: var(--paper);
+      box-shadow: 5px 5px 0 var(--ink);
     }
-    .btn-translate:hover:not(:disabled) {
-      background: #d44429;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(194, 59, 34, 0.35);
-    }
-    .btn-translate:active:not(:disabled) {
-      transform: translateY(0);
-    }
+    .btn-translate:hover:not(:disabled) { background: #ff4422; transform: translate(2px,2px); box-shadow: 3px 3px 0 var(--ink); }
+    .btn-translate:active:not(:disabled) { transform: translate(5px,5px); box-shadow: 0 0 0 var(--ink); }
 
     .btn-clear {
-      background: transparent;
-      color: #888;
-      border: 1px solid #2a2a36;
-      clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: 4px 4px 0 var(--ink);
+      font-size: 14px;
     }
-    .btn-clear:hover:not(:disabled) {
-      color: #e8e4df;
-      border-color: #444;
-      background: #111118;
-    }
+    .btn-clear:hover:not(:disabled) { background: var(--yellow); transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--ink); }
+    .btn-clear:active:not(:disabled) { transform: translate(4px,4px); box-shadow: 0 0 0 var(--ink); }
 
     .btn-settings {
-      background: #111118;
-      color: #999;
-      border: 1px solid #1e1e2a;
+      background: var(--blue);
+      color: var(--paper);
+      box-shadow: 4px 4px 0 var(--ink);
+      font-size: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 9px;
     }
-    .btn-settings:hover:not(:disabled) {
-      color: #d4a853;
-      border-color: rgba(212, 168, 83, 0.3);
-      background: #141420;
-    }
+    .btn-settings:hover:not(:disabled) { background: #2c4ff0; transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--ink); }
+    .btn-settings:active:not(:disabled) { transform: translate(4px,4px); box-shadow: 0 0 0 var(--ink); }
+    .btn-settings .gear-icon { width: 16px; height: 16px; transition: transform 0.5s cubic-bezier(0.34,1.4,0.64,1); }
+    .btn-settings:hover:not(:disabled) .gear-icon { transform: rotate(180deg); }
 
-    .btn-settings .gear-icon {
-      width: 14px;
-      height: 14px;
-      opacity: 0.6;
-      transition: opacity 0.2s, transform 0.4s;
-    }
-
-    .btn-settings:hover:not(:disabled) .gear-icon {
-      opacity: 1;
-      transform: rotate(90deg);
-    }
-
-    /* ── Divider with manga-inspired treatment ───────────── */
+    /* ── Divider: torn-tape ink rule ────────────────────────── */
     .divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, #2a2a36 20%, #2a2a36 80%, transparent);
-      margin: 4px 0 14px;
+      height: 3px;
+      background: var(--ink);
+      margin: 4px 0 16px;
       position: relative;
     }
-
-    /* ── Info grid ───────────────────────────────────────── */
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+    .divider::after {
+      content: 'スキャン';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--paper);
+      padding: 0 8px;
+      font-family: 'Spline Sans Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--ink-soft);
     }
+
+    /* ── Info cards (count panels) ──────────────────────────── */
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
     .info-card {
-      padding: 10px 12px;
-      background: #0e0e16;
-      border: 1px solid #1a1a24;
+      padding: 12px 14px;
+      background: var(--paper-2);
+      border: 2.5px solid var(--ink);
+      box-shadow: 3px 3px 0 var(--ink);
       position: relative;
+      overflow: hidden;
     }
-
     .info-card::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 12px;
-      height: 12px;
-      border-top: 1px solid #2a2a36;
-      border-left: 1px solid #2a2a36;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(31,63,209,0.12) 1px, transparent 1.3px);
+      background-size: 6px 6px;
+      pointer-events: none;
     }
-
-    .info-card::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      width: 12px;
-      height: 12px;
-      border-bottom: 1px solid #2a2a36;
-      border-right: 1px solid #2a2a36;
-    }
-
     .info-label {
+      position: relative;
+      font-family: 'Spline Sans Mono', monospace;
       font-size: 9px;
       font-weight: 700;
-      color: #4a4a58;
+      color: var(--ink-soft);
       text-transform: uppercase;
       letter-spacing: 1.5px;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
-
     .info-value {
-      font-family: 'Shrikhand', serif;
-      font-size: 22px;
-      color: #d4a853;
+      position: relative;
+      font-family: 'Anton', sans-serif;
+      font-size: 30px;
       line-height: 1;
+      color: var(--red);
     }
+    .info-value.muted { color: var(--ink-soft); }
+    .info-card:nth-child(2) .info-value { color: var(--blue); }
 
-    .info-value.muted {
-      color: #3a3a48;
-    }
-
-    /* ── Ink splatter decoration ─────────────────────────── */
-    .ink-splatter {
-      position: absolute;
-      bottom: 20px;
-      right: 10px;
-      width: 50px;
-      height: 50px;
-      opacity: 0.03;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* ── Bottom edge decoration ──────────────────────────── */
+    /* ── Bottom registration bar ────────────────────────────── */
     .bottom-edge {
-      height: 3px;
-      background: linear-gradient(90deg, #c23b22, #d4a853, #c23b22);
-      opacity: 0.6;
+      height: 8px;
+      background: repeating-linear-gradient(90deg,
+        var(--red) 0 16px, var(--ink) 16px 20px,
+        var(--blue) 20px 36px, var(--ink) 36px 40px,
+        var(--yellow) 40px 56px, var(--ink) 56px 60px);
     }
 
-    /* ── Animations ──────────────────────────────────────── */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    /* ── Load orchestration ─────────────────────────────────── */
+    @keyframes panelIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
-
-    .header { animation: fadeIn 0.3s ease; }
-    .content { animation: fadeIn 0.4s ease 0.1s both; }
+    .header      { animation: panelIn 0.35s cubic-bezier(0.34,1.4,0.64,1) both; }
+    .status-bar  { animation: panelIn 0.4s cubic-bezier(0.34,1.4,0.64,1) 0.06s both; }
+    .btn-stack   { animation: panelIn 0.4s cubic-bezier(0.34,1.4,0.64,1) 0.12s both; }
+    .divider     { animation: panelIn 0.4s ease 0.18s both; }
+    .info-grid   { animation: panelIn 0.4s cubic-bezier(0.34,1.4,0.64,1) 0.22s both; }
   </style>
 </head>
 <body>
@@ -403,7 +348,7 @@
       <div class="logo-mark">M</div>
       <div class="header-text">
         <h1>MangaLens</h1>
-        <div class="tagline">Webtoon Translator</div>
+        <div class="tagline">Webtoon&nbsp;Translator</div>
       </div>
     </div>
   </div>
@@ -424,10 +369,10 @@
     </div>
 
     <div class="btn-stack">
-      <button class="btn btn-translate" id="translateBtn" disabled>TRANSLATE CHAPTER</button>
-      <button class="btn btn-clear" id="clearBtn" style="display:none;">CLEAR TRANSLATIONS</button>
+      <button class="btn btn-translate" id="translateBtn" disabled>Translate Chapter</button>
+      <button class="btn btn-clear" id="clearBtn" style="display:none;">Clear Translations</button>
       <button class="btn btn-settings" id="settingsBtn">
-        <svg class="gear-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="gear-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"/>
           <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
         </svg>
@@ -448,16 +393,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Decorative ink splatter SVG -->
-  <svg class="ink-splatter" viewBox="0 0 100 100">
-    <circle cx="40" cy="50" r="18" fill="currentColor"/>
-    <circle cx="65" cy="35" r="10" fill="currentColor"/>
-    <circle cx="55" cy="70" r="8" fill="currentColor"/>
-    <circle cx="75" cy="55" r="5" fill="currentColor"/>
-    <circle cx="30" cy="30" r="4" fill="currentColor"/>
-    <ellipse cx="70" cy="75" rx="6" ry="3" fill="currentColor" transform="rotate(30 70 75)"/>
-  </svg>
 
   <div class="bottom-edge"></div>
 
