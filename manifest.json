@@ -2,11 +2,12 @@
   "manifest_version": 3,
   "name": "MangaLens — Webtoon Translator",
   "version": "1.0.0",
-  "description": "OCR + AI translation for webtoons and manhua on webtoons.com. Translates Chinese/Korean text to English in-place using Kimi K2.6.",
-  "permissions": ["storage", "activeTab"],
+  "description": "OCR + AI translation for webtoons and manhua on webtoons.com. Translates Chinese/Korean/Japanese text to English in-place using local OCR and DeepSeek.",
+  "permissions": ["storage", "unlimitedStorage", "activeTab", "offscreen"],
   "host_permissions": [
     "https://www.webtoons.com/*",
-    "https://api.moonshot.ai/*"
+    "https://api.deepseek.com/*",
+    "https://generativelanguage.googleapis.com/*"
   ],
   "background": {
     "service_worker": "background.js"

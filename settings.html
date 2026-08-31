@@ -171,7 +171,7 @@
       margin-bottom: 8px;
     }
 
-    input[type="password"], select {
+    input[type="password"], input[type="text"], select {
       width: 100%;
       padding: 12px 14px;
       background: var(--paper);
@@ -185,11 +185,30 @@
       -webkit-appearance: none;
       appearance: none;
     }
-    input[type="password"]:focus, select:focus {
+    input[type="password"]:focus, input[type="text"]:focus, select:focus {
       box-shadow: 4px 4px 0 var(--red);
       transform: translate(-1px,-1px);
     }
-    input[type="password"]::placeholder { color: #b3a78f; }
+    input[type="password"]::placeholder, input[type="text"]::placeholder { color: #b3a78f; }
+
+    .provider-sub { display: none; }
+    .provider-sub.active { display: block; }
+
+    .btn-ghost {
+      padding: 8px 16px;
+      background: transparent;
+      color: var(--ink-soft);
+      border: 2px solid var(--ink-soft);
+      font-family: 'Spline Sans Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .btn-ghost:hover { border-color: var(--red); color: var(--red); }
+    .btn-ghost:active { transform: translate(1px, 1px); }
 
     select {
       cursor: pointer;
@@ -295,17 +314,53 @@
     </div>
 
     <div class="settings-card">
-      <!-- API Key Section -->
+      <!-- Translation Section -->
       <div class="setting-section">
         <div class="section-header">
           <div class="section-num">1</div>
-          <div class="section-label">API Key</div>
-          <div class="section-jp">認証</div>
+          <div class="section-label">Translation</div>
+          <div class="section-jp">翻訳</div>
         </div>
         <div class="field">
-          <label for="apiKey">Moonshot API Key</label>
-          <input type="password" id="apiKey" placeholder="sk-..." autocomplete="off">
-          <p class="field-hint">Get your key at <a href="https://platform.moonshot.ai/console/api-keys" target="_blank">platform.moonshot.ai</a></p>
+          <label for="provider">Provider</label>
+          <select id="provider">
+            <option value="builtin" selected>Browser Built-in — free, on-device</option>
+            <option value="deepseek">DeepSeek v4 — cheap, best quality</option>
+            <option value="gemini">Gemini Flash-Lite — free tier</option>
+          </select>
+          <p class="field-hint">Built-in runs entirely in your browser (Chrome 138+). Failed batches fall back to any configured provider automatically.</p>
+        </div>
+
+        <div class="provider-sub" id="deepseekFields">
+          <div class="field">
+            <label for="apiKey">DeepSeek API Key</label>
+            <input type="password" id="apiKey" placeholder="sk-..." autocomplete="off">
+            <p class="field-hint">Get your key at <a href="https://platform.deepseek.com/api_keys" target="_blank">platform.deepseek.com</a></p>
+          </div>
+          <div class="field">
+            <label for="deepseekModel">DeepSeek Model</label>
+            <select id="deepseekModel">
+              <option value="deepseek-v4-flash" selected>v4-flash — ~$0.001/chapter</option>
+              <option value="deepseek-v4-pro">v4-pro — 3x pricier, sharper nuance</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="provider-sub" id="geminiFields">
+          <div class="field">
+            <label for="geminiKey">Gemini API Key</label>
+            <input type="password" id="geminiKey" placeholder="AIza..." autocomplete="off">
+            <p class="field-hint">Free-tier key at <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com</a></p>
+          </div>
+          <div class="field">
+            <label for="geminiModel">Gemini Model</label>
+            <input type="text" id="geminiModel" placeholder="gemini-2.5-flash-lite" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="field">
+          <button class="btn-ghost" id="clearCacheBtn">Clear Translation Cache</button>
+          <p class="field-hint" id="cacheStats">Translations are cached per language pair — rereading a chapter is free.</p>
         </div>
       </div>
 
@@ -378,7 +433,7 @@
     </div>
 
     <div class="page-footer">
-      MangaLens <span>//</span> v1.0.0
+      MangaLens <span>//</span> v1.1.0
     </div>
   </div>
 

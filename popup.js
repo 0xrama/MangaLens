@@ -10,11 +10,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   const imageCountEl = document.getElementById('imageCount');
   const translatedCountEl = document.getElementById('translatedCount');
 
-  // Check API key
-  const { apiKey } = await chrome.storage.local.get('apiKey');
-  if (apiKey) {
+  // Check that at least one provider is usable — the built-in translator
+  // needs no key at all.
+  const { provider, apiKey, geminiKey } = await chrome.storage.local.get(
+    ['provider', 'apiKey', 'geminiKey']
+  );
+  const active = provider || 'builtin';
+  const usable =
+    (active === 'builtin') ||
+    (active === 'deepseek' && !!apiKey) ||
+    (active === 'gemini' && !!geminiKey) ||
+    !!apiKey || !!geminiKey; // fallback providers configured
+
+  if (active === 'builtin') {
     statusDot.classList.add('connected');
-    statusText.textContent = 'API key configured';
+    statusText.textContent = 'Built-in translator · free';
+    translateBtn.disabled = false;
+  } else if (usable) {
+    statusDot.classList.add('connected');
+    statusText.textContent = `Provider: ${active}`;
     translateBtn.disabled = false;
   }
 
